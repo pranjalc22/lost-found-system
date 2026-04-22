@@ -51,7 +51,6 @@ public class RegisterFrame extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(PRIMARY_COLOR);
 
-        // Header
         JPanel headerPanel = new JPanel();
         headerPanel.setBackground(PRIMARY_COLOR);
         headerPanel.setPreferredSize(new Dimension(420, 110));
@@ -78,34 +77,29 @@ public class RegisterFrame extends JFrame {
         headerPanel.add(Box.createVerticalStrut(3));
         headerPanel.add(subtitleLabel);
 
-        // Card
         JPanel cardPanel = new JPanel();
         cardPanel.setBackground(CARD_COLOR);
         cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
         cardPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
 
-        // Name
         JLabel nameLabel = new JLabel("Full Name");
         nameLabel.setFont(new Font("Arial", Font.BOLD, 12));
         nameLabel.setForeground(TEXT_COLOR);
         nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         nameField = createStyledTextField();
 
-        // Email
         JLabel emailLabel = new JLabel("Email Address");
         emailLabel.setFont(new Font("Arial", Font.BOLD, 12));
         emailLabel.setForeground(TEXT_COLOR);
         emailLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         emailField = createStyledTextField();
 
-        // Phone
         JLabel phoneLabel = new JLabel("Phone Number");
         phoneLabel.setFont(new Font("Arial", Font.BOLD, 12));
         phoneLabel.setForeground(TEXT_COLOR);
         phoneLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         phoneField = createStyledTextField();
 
-        // Password
         JLabel passwordLabel = new JLabel("Password");
         passwordLabel.setFont(new Font("Arial", Font.BOLD, 12));
         passwordLabel.setForeground(TEXT_COLOR);
@@ -119,7 +113,6 @@ public class RegisterFrame extends JFrame {
         ));
         passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Register button
         registerButton = new JButton("CREATE ACCOUNT");
         registerButton.setFont(new Font("Arial", Font.BOLD, 14));
         registerButton.setBackground(PRIMARY_COLOR);
@@ -131,7 +124,6 @@ public class RegisterFrame extends JFrame {
         registerButton.setOpaque(true);
         registerButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Back button
         backButton = new JButton("Already have an account? Login");
         backButton.setFont(new Font("Arial", Font.PLAIN, 12));
         backButton.setBackground(CARD_COLOR);

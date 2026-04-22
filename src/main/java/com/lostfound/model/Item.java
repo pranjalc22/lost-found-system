@@ -1,10 +1,8 @@
 package com.lostfound.model;
 
-// Unit 3 - Inheritance: Parent class Item
-// Unit 4 - Abstraction: Abstract class
+// Abstract parent class for LostItem and FoundItem
 public abstract class Item {
 
-    // Unit 1 - Access modifiers: protected so child classes can access
     protected int itemId;
     protected String itemName;
     protected String category;
@@ -13,11 +11,13 @@ public abstract class Item {
     protected String dateReported;
     protected String status; // "lost" or "found"
     protected int userId;
+    protected String imagePath; // Cloudinary URL of item image
+    protected boolean recovered;
 
-    // Unit 1 - Default constructor
+    // Default constructor
     public Item() {}
 
-    // Unit 1 - Parameterized constructor + this keyword
+    // Constructor for fetching existing item from DB (includes itemId)
     public Item(int itemId, String itemName, String category, String description,
                 String location, String dateReported, String status, int userId) {
         this.itemId = itemId;
@@ -30,7 +30,7 @@ public abstract class Item {
         this.userId = userId;
     }
 
-    // Unit 1 - Constructor without itemId (for reporting new item)
+    // Constructor for reporting a new item (no itemId yet)
     public Item(String itemName, String category, String description,
                 String location, String dateReported, String status, int userId) {
         this.itemName = itemName;
@@ -42,16 +42,16 @@ public abstract class Item {
         this.userId = userId;
     }
 
-    // Unit 4 - Abstract method (must be implemented by child classes)
+    // Must be implemented by child classes
     public abstract String getItemType();
 
-    // Unit 3 - Method overriding will happen in child classes
+    // Can be overridden by child classes
     public String getDetails() {
         return "Item [ID=" + itemId + ", Name=" + itemName + ", Category=" + category +
                ", Location=" + location + ", Date=" + dateReported + ", Status=" + status + "]";
     }
 
-    // Unit 1 - Getters and Setters
+    // Getters and Setters
     public int getItemId() { return itemId; }
     public void setItemId(int itemId) { this.itemId = itemId; }
 
@@ -75,4 +75,10 @@ public abstract class Item {
 
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
+
+    public String getImagePath() { return imagePath; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+
+    public boolean isRecovered() { return recovered; }
+    public void setRecovered(boolean recovered) { this.recovered = recovered; }
 }

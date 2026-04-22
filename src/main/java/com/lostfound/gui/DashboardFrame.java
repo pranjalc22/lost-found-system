@@ -22,7 +22,8 @@ import com.lostfound.model.User;
 
 public class DashboardFrame extends JFrame {
 
-    private User currentUser;
+    private final User currentUser;
+
     private static final Color PRIMARY_COLOR = new Color(33, 150, 243);
     private static final Color BACKGROUND_COLOR = new Color(245, 245, 245);
     private static final Color CARD_COLOR = Color.WHITE;
@@ -30,6 +31,8 @@ public class DashboardFrame extends JFrame {
     private static final Color GREEN_COLOR = new Color(76, 175, 80);
     private static final Color ORANGE_COLOR = new Color(255, 152, 0);
     private static final Color RED_COLOR = new Color(244, 67, 54);
+    private static final Color INDIGO_COLOR = new Color(103, 58, 183);
+    private static final Color ALERT_RED_COLOR = new Color(211, 47, 47);
 
     public DashboardFrame(User user) {
         this.currentUser = user;
@@ -46,7 +49,6 @@ public class DashboardFrame extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(BACKGROUND_COLOR);
 
-        // Header
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(PRIMARY_COLOR);
         headerPanel.setPreferredSize(new Dimension(520, 100));
@@ -60,79 +62,83 @@ public class DashboardFrame extends JFrame {
         welcomeLabel.setFont(new Font("Arial", Font.PLAIN, 13));
         welcomeLabel.setForeground(new Color(200, 230, 255));
 
-        JLabel nameLabel = new JLabel(currentUser.getName() + " 👋");
+        JLabel nameLabel = new JLabel(currentUser.getName());
         nameLabel.setFont(new Font("Arial", Font.BOLD, 20));
         nameLabel.setForeground(Color.WHITE);
 
         headerLeft.add(welcomeLabel);
         headerLeft.add(nameLabel);
 
-        JLabel logoLabel = new JLabel("🔍");
-        logoLabel.setFont(new Font("Arial", Font.PLAIN, 40));
-        logoLabel.setForeground(Color.WHITE);
+        JPanel headerRight = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        headerRight.setBackground(PRIMARY_COLOR);
+
+        String initial = currentUser.getName() != null && !currentUser.getName().trim().isEmpty()
+                ? currentUser.getName().trim().substring(0, 1).toUpperCase()
+                : "U";
+
+        JButton profileButton = new JButton(initial);
+        profileButton.setFont(new Font("Arial", Font.BOLD, 18));
+        profileButton.setForeground(Color.WHITE);
+        profileButton.setPreferredSize(new Dimension(45, 45));
+        profileButton.setFocusPainted(false);
+        profileButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        profileButton.setContentAreaFilled(false);
+        profileButton.setOpaque(false);
+        profileButton.setBorder(new LineBorder(Color.WHITE, 2, true));
+        profileButton.addActionListener(e -> {
+            new ProfileFrame(currentUser).setVisible(true);
+            dispose();
+        });
+
+        headerRight.add(profileButton);
 
         headerPanel.add(headerLeft, BorderLayout.WEST);
-        headerPanel.add(logoLabel, BorderLayout.EAST);
+        headerPanel.add(headerRight, BorderLayout.EAST);
 
-        // Content panel
         JPanel contentPanel = new JPanel();
         contentPanel.setBackground(BACKGROUND_COLOR);
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setLayout(new BorderLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
 
-        // Section title
         JLabel sectionLabel = new JLabel("What would you like to do?");
         sectionLabel.setFont(new Font("Arial", Font.BOLD, 15));
         sectionLabel.setForeground(TEXT_COLOR);
-        sectionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        sectionLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
-        contentPanel.add(sectionLabel);
-        contentPanel.add(Box.createVerticalStrut(20));
+        JPanel gridPanel = new JPanel(new GridLayout(2, 2, 15, 15));
+        gridPanel.setBackground(BACKGROUND_COLOR);
 
-        // Cards row 1
-        JPanel row1 = new JPanel(new GridLayout(1, 2, 15, 0));
-        row1.setBackground(BACKGROUND_COLOR);
-        row1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
-        row1.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        row1.add(createMenuCard("📦", "Report Lost Item",
-                "Lost something? Report it here", PRIMARY_COLOR, e -> {
+        gridPanel.add(createMenuCard("L", "Report Lost Item",
+                "Lost something? Report it here", ALERT_RED_COLOR, e -> {
             new ReportLostItemFrame(currentUser).setVisible(true);
             dispose();
         }));
 
-        row1.add(createMenuCard("✅", "Report Found Item",
+        gridPanel.add(createMenuCard("F", "Report Found Item",
                 "Found something? Let us know", GREEN_COLOR, e -> {
             new ReportFoundItemFrame(currentUser).setVisible(true);
             dispose();
         }));
 
-        // Cards row 2
-        JPanel row2 = new JPanel(new GridLayout(1, 2, 15, 0));
-        row2.setBackground(BACKGROUND_COLOR);
-        row2.setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
-        row2.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        row2.add(createMenuCard("🔎", "Browse Items",
-                "Search lost & found items", ORANGE_COLOR, e -> {
+        gridPanel.add(createMenuCard("B", "Browse Items",
+                "Search lost and found items", ORANGE_COLOR, e -> {
             new BrowseItemsFrame(currentUser).setVisible(true);
             dispose();
         }));
 
-        row2.add(createMenuCard("🚪", "Logout",
-                "Sign out of your account", RED_COLOR, e -> {
-            new LoginFrame().setVisible(true);
+        gridPanel.add(createMenuCard("M", "My Items",
+                "Review items you reported", INDIGO_COLOR, e -> {
+            new MyItemsFrame(currentUser).setVisible(true);
             dispose();
         }));
 
-        contentPanel.add(row1);
-        contentPanel.add(Box.createVerticalStrut(15));
-        contentPanel.add(row2);
+        contentPanel.add(sectionLabel, BorderLayout.NORTH);
+        contentPanel.add(gridPanel, BorderLayout.CENTER);
 
-        // Bottom status bar
         JPanel statusBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
         statusBar.setBackground(new Color(230, 230, 230));
         statusBar.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+
         JLabel statusLabel = new JLabel("Logged in as: " + currentUser.getEmail());
         statusLabel.setFont(new Font("Arial", Font.PLAIN, 11));
         statusLabel.setForeground(new Color(100, 100, 100));
@@ -141,12 +147,11 @@ public class DashboardFrame extends JFrame {
         mainPanel.add(headerPanel, BorderLayout.NORTH);
         mainPanel.add(contentPanel, BorderLayout.CENTER);
         mainPanel.add(statusBar, BorderLayout.SOUTH);
-
         setContentPane(mainPanel);
     }
 
     private JPanel createMenuCard(String icon, String title, String subtitle,
-                                   Color color, java.awt.event.ActionListener action) {
+                                  Color color, java.awt.event.ActionListener action) {
         JPanel card = new JPanel();
         card.setBackground(CARD_COLOR);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -155,10 +160,6 @@ public class DashboardFrame extends JFrame {
             BorderFactory.createEmptyBorder(20, 20, 20, 20)
         ));
         card.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        JLabel iconLabel = new JLabel(icon);
-        iconLabel.setFont(new Font("Arial", Font.PLAIN, 30));
-        iconLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 13));
@@ -170,24 +171,22 @@ public class DashboardFrame extends JFrame {
         subtitleLabel.setForeground(new Color(150, 150, 150));
         subtitleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton btn = new JButton("Open →");
-        btn.setFont(new Font("Arial", Font.BOLD, 11));
-        btn.setBackground(color);
-        btn.setForeground(Color.WHITE);
-        btn.setBorder(BorderFactory.createEmptyBorder(5, 12, 5, 12));
-        btn.setFocusPainted(false);
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btn.setOpaque(true);
-        btn.setAlignmentX(Component.LEFT_ALIGNMENT);
-        btn.addActionListener(action);
+        JButton button = new JButton("Open");
+        button.setFont(new Font("Arial", Font.BOLD, 11));
+        button.setBackground(color);
+        button.setForeground(Color.WHITE);
+        button.setBorder(BorderFactory.createEmptyBorder(5, 12, 5, 12));
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setOpaque(true);
+        button.setAlignmentX(Component.LEFT_ALIGNMENT);
+        button.addActionListener(action);
 
-        card.add(iconLabel);
-        card.add(Box.createVerticalStrut(8));
         card.add(titleLabel);
         card.add(Box.createVerticalStrut(4));
         card.add(subtitleLabel);
         card.add(Box.createVerticalStrut(12));
-        card.add(btn);
+        card.add(button);
 
         return card;
     }

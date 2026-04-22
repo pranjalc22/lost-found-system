@@ -7,44 +7,42 @@ import com.lostfound.util.CustomException;
 import java.util.List;
 import java.util.ArrayList;
 
-// MVC - Controller layer
+// Connects GUI to service layer, handles exceptions
 public class ItemController {
 
-    // Unit 1 - Instance variable
     private ItemService itemService;
 
-    // Unit 1 - Constructor
     public ItemController() {
         this.itemService = new ItemService();
     }
 
-    // Handle reporting a lost item
+    // Passes lost item data including image URL to service layer
     public boolean reportLostItem(String itemName, String category, String description,
                                    String location, String dateReported, int userId,
-                                   String contactInfo) {
+                                   String contactInfo, String imageUrl) {
         try {
             return itemService.reportLostItem(itemName, category, description,
-                                              location, dateReported, userId, contactInfo);
+                                              location, dateReported, userId, contactInfo, imageUrl);
         } catch (CustomException e) {
             System.out.println(e.getMessage());
             return false;
         }
     }
 
-    // Handle reporting a found item
+    // Passes found item data including image URL to service layer
     public boolean reportFoundItem(String itemName, String category, String description,
                                     String location, String dateReported, int userId,
-                                    String foundLocation) {
+                                    String foundLocation, String imageUrl) {
         try {
             return itemService.reportFoundItem(itemName, category, description,
-                                               location, dateReported, userId, foundLocation);
+                                               location, dateReported, userId, foundLocation, imageUrl);
         } catch (CustomException e) {
             System.out.println(e.getMessage());
             return false;
         }
     }
 
-    // Unit 5 - ArrayList, Unit 8 - Java 8 streams in service layer
+    // Returns list of all lost items
     public List<Item> getLostItems() {
         try {
             return itemService.getLostItems();
@@ -54,9 +52,64 @@ public class ItemController {
         }
     }
 
+    // Returns list of all found items
     public List<Item> getFoundItems() {
         try {
             return itemService.getFoundItems();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Item> getRecoveredItems() {
+        try {
+            return itemService.getRecoveredItems();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public boolean submitClaim(int itemId, int claimerId, String message) {
+        try {
+            return itemService.submitClaim(itemId, claimerId, message);
+        } catch (CustomException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean markItemRecovered(int itemId) {
+        try {
+            return itemService.markItemRecovered(itemId);
+        } catch (CustomException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean markItemAsLost(int itemId) {
+        try {
+            return itemService.markItemAsLost(itemId);
+        } catch (CustomException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public List<Item> getItemsByCategory(String status, String category) {
+        try {
+            return itemService.getItemsByCategory(status, category);
+        } catch (CustomException e) {
+            System.out.println(e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Item> getItemsByUserId(int userId) {
+        try {
+            return itemService.getItemsByUserId(userId);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ArrayList<>();

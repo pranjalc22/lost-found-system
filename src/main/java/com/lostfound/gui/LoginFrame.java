@@ -32,7 +32,7 @@ public class LoginFrame extends JFrame {
     private JButton registerButton;
     private AuthController authController;
 
-    // Colors
+
     private static final Color PRIMARY_COLOR = new Color(33, 150, 243);
     private static final Color BACKGROUND_COLOR = new Color(245, 245, 245);
     private static final Color CARD_COLOR = Color.WHITE;
@@ -51,11 +51,9 @@ public class LoginFrame extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
-        // Main panel with background color
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(PRIMARY_COLOR);
 
-        // Top header panel
         JPanel headerPanel = new JPanel();
         headerPanel.setBackground(PRIMARY_COLOR);
         headerPanel.setPreferredSize(new Dimension(420, 130));
@@ -82,13 +80,11 @@ public class LoginFrame extends JFrame {
         headerPanel.add(Box.createVerticalStrut(3));
         headerPanel.add(subtitleLabel);
 
-        // Card panel
         JPanel cardPanel = new JPanel();
         cardPanel.setBackground(CARD_COLOR);
         cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
         cardPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
 
-        // Email field
         JLabel emailLabel = new JLabel("Email Address");
         emailLabel.setFont(new Font("Arial", Font.BOLD, 12));
         emailLabel.setForeground(TEXT_COLOR);
@@ -103,7 +99,6 @@ public class LoginFrame extends JFrame {
         ));
         emailField.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Password field
         JLabel passwordLabel = new JLabel("Password");
         passwordLabel.setFont(new Font("Arial", Font.BOLD, 12));
         passwordLabel.setForeground(TEXT_COLOR);
@@ -118,7 +113,6 @@ public class LoginFrame extends JFrame {
         ));
         passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Login button
         loginButton = new JButton("LOGIN");
         loginButton.setFont(new Font("Arial", Font.BOLD, 14));
         loginButton.setBackground(PRIMARY_COLOR);
@@ -130,7 +124,6 @@ public class LoginFrame extends JFrame {
         loginButton.setOpaque(true);
         loginButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Register button
         registerButton = new JButton("Create New Account");
         registerButton.setFont(new Font("Arial", Font.PLAIN, 13));
         registerButton.setBackground(CARD_COLOR);
@@ -142,7 +135,6 @@ public class LoginFrame extends JFrame {
         registerButton.setOpaque(true);
         registerButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Add components to card
         cardPanel.add(emailLabel);
         cardPanel.add(Box.createVerticalStrut(5));
         cardPanel.add(emailField);
@@ -160,7 +152,6 @@ public class LoginFrame extends JFrame {
 
         setContentPane(mainPanel);
 
-        // Event handling
         loginButton.addActionListener(e -> handleLogin());
         registerButton.addActionListener(e -> {
             new RegisterFrame().setVisible(true);

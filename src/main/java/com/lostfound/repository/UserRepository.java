@@ -1,18 +1,16 @@
 package com.lostfound.repository;
 
-import com.lostfound.database.DBConnection;
-import com.lostfound.model.User;
-import com.lostfound.util.FileLogger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-// Unit 6 - JDBC, Unit 5 - Exception handling
+import com.lostfound.database.DBConnection;
+import com.lostfound.model.User;
+import com.lostfound.util.FileLogger;
+
 public class UserRepository {
 
-    // Unit 1 - Instance method
     // Saves a new user to the database
     public boolean registerUser(User user) {
         String sql = "INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)";
@@ -23,17 +21,17 @@ public class UserRepository {
             stmt.setString(2, user.getEmail());
             stmt.setString(3, user.getPhone());
             stmt.setString(4, user.getPassword());
-            stmt.executeUpdate();
+            stmt.executeUpdate();//inserts user
             FileLogger.log("New user registered: " + user.getEmail());
-            return true;
+            return true;//logs registration
         } catch (SQLException e) {
             FileLogger.log("Registration failed: " + e.getMessage());
             return false;
         }
     }
 
-    // Unit 6 - JDBC query to find user by email and password
     public User loginUser(String email, String password) {
+        //validating credentials:
         String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
         try {
             Connection conn = DBConnection.getConnection();
@@ -53,6 +51,45 @@ public class UserRepository {
         } catch (SQLException e) {
             FileLogger.log("Login failed: " + e.getMessage());
         }
+        return null;//if login fails
+    }
+
+    public User getUserById(int userId) {
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+        try {
+            Connection conn = DBConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(
+                    rs.getInt("user_id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getString("phone"),
+                    rs.getString("password")
+                );
+            }
+        } catch (SQLException e) {
+            FileLogger.log("Get user by ID failed: " + e.getMessage());
+        }
         return null;
+    }
+
+    public boolean updateUser(int userId, String name, String phone) {
+        String sql = "UPDATE users SET name = ?, phone = ? WHERE user_id = ?";
+        try {
+            Connection conn = DBConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, phone);
+            stmt.setInt(3, userId);
+            stmt.executeUpdate();
+            FileLogger.log("User updated: " + userId);
+            return true;
+        } catch (SQLException e) {
+            FileLogger.log("Update user failed: " + e.getMessage());
+            return false;
+        }
     }
 }
