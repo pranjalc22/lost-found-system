@@ -13,6 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,7 +33,7 @@ import com.lostfound.util.CloudinaryConfig;
 public class ReportFoundItemFrame extends JFrame {
 
     private JTextField itemNameField;
-    private JTextField categoryField;
+    private JComboBox<String> categoryField;
     private JTextField locationField;
     private JTextField foundLocationField;
     private JTextArea descriptionArea;
@@ -75,7 +76,7 @@ public class ReportFoundItemFrame extends JFrame {
         headerLeft.setBackground(PRIMARY_COLOR);
         headerLeft.setLayout(new BoxLayout(headerLeft, BoxLayout.Y_AXIS));
 
-        JLabel titleLabel = new JLabel("✅ Report Found Item");
+        JLabel titleLabel = new JLabel("\u2705 Report Found Item");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         titleLabel.setForeground(Color.WHITE);
 
@@ -102,7 +103,7 @@ public class ReportFoundItemFrame extends JFrame {
 
         cardPanel.add(createFieldLabel("Category"));
         cardPanel.add(Box.createVerticalStrut(5));
-        categoryField = createStyledTextField();
+        categoryField = createStyledCategoryComboBox();
         cardPanel.add(categoryField);
         cardPanel.add(Box.createVerticalStrut(15));
 
@@ -137,7 +138,7 @@ public class ReportFoundItemFrame extends JFrame {
         cardPanel.add(createFieldLabel("Item Image (optional)"));
         cardPanel.add(Box.createVerticalStrut(5));
 
-        chooseImageButton = new JButton("📷 Choose Image");
+        chooseImageButton = new JButton("\uD83D\uDCF7 Choose Image");
         chooseImageButton.setFont(new Font("Arial", Font.PLAIN, 12));
         chooseImageButton.setBackground(new Color(240, 240, 240));
         chooseImageButton.setForeground(TEXT_COLOR);
@@ -166,7 +167,7 @@ public class ReportFoundItemFrame extends JFrame {
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
                 selectedImagePath = selectedFile.getAbsolutePath();
-                imageStatusLabel.setText("✅ " + selectedFile.getName());
+                imageStatusLabel.setText("\u2705 " + selectedFile.getName());
                 imageStatusLabel.setForeground(new Color(76, 175, 80));
             }
         });
@@ -188,7 +189,7 @@ public class ReportFoundItemFrame extends JFrame {
         submitButton.setOpaque(true);
         submitButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        backButton = new JButton("← Back to Dashboard");
+        backButton = new JButton("\u2190 Back to Dashboard");
         backButton.setFont(new Font("Arial", Font.PLAIN, 12));
         backButton.setBackground(CARD_COLOR);
         backButton.setForeground(PRIMARY_COLOR);
@@ -237,9 +238,32 @@ public class ReportFoundItemFrame extends JFrame {
         return field;
     }
 
+    private JComboBox<String> createStyledCategoryComboBox() {
+        JComboBox<String> comboBox = new JComboBox<>(new String[] {
+            "Select Category",
+            "Electronics",
+            "Bags",
+            "ID Cards",
+            "Clothing",
+            "Keys",
+            "Wallet",
+            "Books",
+            "Other"
+        });
+        comboBox.setFont(new Font("Arial", Font.PLAIN, 13));
+        comboBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        comboBox.setBorder(BorderFactory.createCompoundBorder(
+            new LineBorder(new Color(200, 200, 200), 1, true),
+            BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        comboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return comboBox;
+    }
+
     private void handleSubmit() {
         String itemName = itemNameField.getText().trim();
-        String category = categoryField.getText().trim();
+        String selectedCategory = (String) categoryField.getSelectedItem();
+        String category = "Select Category".equals(selectedCategory) ? "" : selectedCategory;
         String location = locationField.getText().trim();
         String foundLocation = foundLocationField.getText().trim();
         String description = descriptionArea.getText().trim();
